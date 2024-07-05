@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-XdZJ0vpBm1X5lTTT8QzvuhEcg3Z9Kt4Zvh2C1jDL0jRvHl7bVCw6x+2J/DyGZtV47czhL3YH4BL3IdGNYQaYkg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+        }
+        .fa-circle {
+            color: orangered;
+        }
+        .searchBar {
+            background-color: #eee;
+            border-radius: 3px;
+            padding: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        input {
+            background: none;
+            padding: 10px 20px;
+            border: 2px solid rgb(202, 199, 199);
+            border-radius: 20px;
+        }
+        .header {
+            height: 50px;
+            border-radius: 3px;
+            background-color: #333;
+            margin: 3vh 0;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .header p {
+            font-size: 30px;
+            font-weight: bold;
+            color: white;
+        }
+        .logo {
+            font-size: 40px;
+            text-transform: uppercase;
+        }
+        .add {
+            width: 15%;
+            text-transform: capitalize;
+            position: relative;
+            cursor: pointer;
+            background-color: crimson;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 900;
+        }
+        .add:hover {
+            color: white;
+        }
+        .data {
+            width: 100%;
+            gap: 10px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+        }
+        .box {
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 15px;
+            height: 300px;
+        }
+        .img-box {
+            height: 176px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .images {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: cover;
+        }
+        .bottom {
+            text-align: center;
+        }
+        .bottom p {
+            font-size: 15px;
+            color: orangered;
+            text-align: center;
+            padding: 0px 0px;
+        }
+        .bottom h2 {
+            font-size: 15px;
+            color: orangered;
+            padding: 10px 0px;
+            text-align: center;
+        }
+        h2 {
+            font-size: 25px;
+            color: orangered;
+            text-align: center;
+        }
+        button {
+            width: 100%;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            padding: 5px 25px;
+            cursor: pointer;
+            font-size: 15px;
+            color: white;
+            margin-top: -15px;
+        }
+        button:hover {
+            background-color: orangered;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .cart-modal {
+            display: none;
+            position: fixed;
+            top: 10%;
+            right: 5%;
+            width: 300px;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+        }
+        .cart-summary {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .cart-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            color: #333;
+        }
+        .cart-count {
+            background-color: orangered;
+            border-radius: 50%;
+            color: white;
+            padding: 2px 7px;
+            font-size: 12px;
+            margin-right: 20px;
+            position: absolute;
+            top: 10px;
+            right: 0;
+        }
+
+        @media screen and (min-width: 1024px) {
+            .data {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media screen and (min-width: 769px) and (max-width: 1023px) {
+            .data {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media screen and (min-width: 570px) and (max-width: 768px) {
+            .data {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media screen and (max-width: 569px) {
+            .data {
+                grid-template-columns: 1fr;
+            }
+
+            .searchBar {
+                padding: 9px 5px;
+            }
+
+            input {
+                padding: 5px 5px;
+                width: 90px;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            .add {
+                width: 80px;
+                padding: 5px 10px;
+            }
+
+            button {
+                padding: 8px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="searchBar">
+        <input placeholder="Search..." id="searchBar" name="searchBar" type="text">
+        <h1 class="logo">TLG Gaming</h1>
+        <div class="add" onclick="toggleCartModal()">Cart <span class="cart-count" id="cart-count">0</span></div>
+    </div>
+
+    <!-- Separate sections for each category -->
+    <h2 class="header">PROCESSOR</h2>
+    <div class="data" id="root1"></div>
+    <h2 class="header">RAM</h2>
+    <div class="data" id="root2"></div>
+    <h2 class="header">MOTHERBOARD 1</h2>
+    <div class="data" id="root3"></div>
+    <h2 class="header">LIQUID COOLER</h2>
+    <div class="data" id="root4"></div>
+    <h2 class="header">RAM 2</h2>
+    <div class="data" id="root5"></div>
+    <h2 class="header">STOREGE</h2>
+    <div class="data" id="root6"></div>
+    <h2 class="header">MOUSEPAD</h2>
+    <div class="data" id="root7"></div>
+    <h2 class="header">MOTHERBOARD 2</h2>
+    <div class="data" id="root8"></div>
+    <h2 class="header">MOTHERBOARD 3</h2>
+    <div class="data" id="root9"></div>
+
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cart-modal">
+        <span class="cart-close" onclick="toggleCartModal()">✖</span>
+        <h2>Cart</h2>
+        <div id="cart-items"></div>
+        <p class="cart-summary">Total: Rs. <span id="cart-total">0.00</span></p>
+    </div>
+
+    <script>
+        // Sample data for products in different categories
+        const category1 = [
+            { id: 0, image: 'AMD RYZEN 5 5600G PROCESSOR.jpg', title: 'AMD RYZEN 5 5600G', price: 11899, link: 'file:///C:/Users/JLNCTI5/Downloads/tlg/finalwebbuyp.html' },
+            { id: 1, image: 'AMD RYZEN 5 7600.jpg', title: 'AMD Ryzen 5 7600', price: 150, link: 'file:///C:/Users/JLNCTI5/Downloads/tlg/finalwebbuyp2.html' },
+            { id: 2, image: 'AMD Ryzen 5 7600x.jpg', title: 'AMD Ryzen 5 7600x', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp3.html' },
+            { id: 3, image: 'ASUS ROG Strix B450 F Gaming.jpg', title: 'ASUS ROG Strix B450 F', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp3.html' }
+        ];
+
+        const category2 = [
+            { id: 0, image: 'Corsair Vengeance LPX 8GB.jpg', title: 'Corsair Vengeance LPX 8GB', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp2.html' },
+            { id: 1, image: 'G.SKILL RIPJAWS 8GB.jpg', title: 'G.SKILL RIPJAWS 8GB', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp.html' },
+            { id: 2, image: 'G.SKILL RIPJAWS V 16GB.jpg', title: 'G.SKILL RIPJAWS V 16GB ', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp3.html' },
+            { id: 3, image: 'Kingston A2000 1TB.jpg', title: 'Kingston A2000 1TB', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp.html' }
+        ];
+
+        const category3 = [
+            { id: 0, image: 'ASUS Prime B550M-A WiFi 6.jpg', title: 'ASUS Prime B550M-A WiFi 6', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp2.html' },
+            { id: 1, image: 'ASUS ROG STRIX B550-E.jpg', title: 'ASUS ROG STRIX B550-E', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp2.html' },
+            { id: 2, image: 'ASUS ROG STRIX B550-F.jpg', title: 'ASUS ROG STRIX B550-F', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp3.html' },
+            { id: 3, image: 'ASUS ROG STRIX HELIOS.jpg', title: 'ASUS ROG STRIX HELIOS', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp2.html' }
+        ];
+
+        const category4 = [
+            { id: 0, image: 'Deepcool Gammaxx LE520.jpg', title: 'MSI RTX 3050 Ventus 2X ', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp.html' },
+            { id: 1, image: 'Corsair H150 RGB.jpg', title: 'Corsair H150 RGB', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp2.html' },
+            { id: 2, image: 'Arctic Liquid Freezer III 360.jpg', title: 'Arctic Liquid Freezer III', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp3.html' },
+            { id: 3, image: 'arctic liquid freezer III black.jpg', title: 'Arctic Liquid Freezer III Black', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp.html' }
+        ];
+
+        const category5 = [
+            { id: 0, image: 'Deepcool Gammaxx LE520.jpg', title: 'Deepcool Gammaxx LE520', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp2.html' },
+            { id: 1, image: 'ADATA XPG 16GB.jpg', title: 'ADATA XPG 16GB', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp.html' },
+            { id: 2, image: 'Kingston A2000 1TB.jpg', title: 'KINGSTON A2000 1TB ', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp3.html' },
+            { id: 3, image: 'KINGSTON A2000 250GB.jpg', title: 'KINGSTON A2000 250GB', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp.html' }
+        ];
+
+        const category6 = [
+            { id: 0, image: 'KINGSTON A400 960 GB.jpg', title: 'KINGSTON A400 960 GB', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp2.html' },
+            { id: 1, image: 'KINGSTON A400 480GB.jpg', title: 'KINGSTON A400 480GB', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp.html' },
+            { id: 2, image: 'KINGSTON 240GB M.2.jpg', title: 'KINGSTON 240GB M.2', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp3.html' },
+            { id: 3, image: 'KINGSTON 250GB M.2.jpg', title: 'KINGSTON 250GB M.2', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp.html' }
+        ];
+
+        const category7 = [
+            { id: 0, image: 'LENOVO 27 Legion Y27q 20.jpg', title: 'LENOVO 27 Legion Y27q 20', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp2.html' },
+            { id: 1, image: 'LOGITECH G102 LIGHTSYNC MOUSE.jpg', title: 'LOGITECH G102 MOUSE', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp.html' },
+            { id: 2, image: 'MOUSEPAD.jpg', title: 'MOUSEPAD', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp3.html' },
+            { id: 3, image: 'MONITOR.jpg', title: 'MONITOR', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp.html' }
+        ];
+
+        const category8 = [
+            { id: 0, image: 'MSI A320M-A PRO MAX.jpg', title: 'MSI A320M-A PRO MAX ', price: 4999, link: 'http://127.0.0.1:5500/finalwebbuyp2.html' },
+            { id: 1, image: 'MSI A520M VECTOR.jpg', title: 'MSI A520M VECTOR ', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp.html' },
+            { id: 2, image: 'MSI  X570 GAMING PLUS.jpg', title: 'MSI X570 GAMING PLUS', price: 13299, link: 'http://127.0.0.1:5500/finalwebbuyp3.html' },
+            { id: 3, image: 'MSI MAG X570 TOMAHAWK.jpg', title: 'MSI MAG X570 TOMAHAWK ', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp2.html' }
+        ];
+
+        const category9 = [
+            { id: 0, image: 'MSI MEG X570S ACE MAX.jpg', title: 'MSI MEG X570S ACE MAX', price: 30999, link: 'http://127.0.0.1:5500/finalwebbuyp.html' },
+            { id: 1, image: 'MSI MAG B460M BAZOOKA.jpg', title: 'MSI MAG B460M BAZOOKA', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp2.html' },
+            { id: 2, image: 'ZOTAC GAMING RTX 4080.jpg', title: 'ZOTAC GAMING RTX 4080', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp3.html' },
+            { id: 3, image: 'ADATA XPG DEFENDER.jpg', title: 'ADATA XPG DEFENDER', price: 60, link: 'http://127.0.0.1:5500/finalwebbuyp.html' }
+        ];
+
+       // Array to hold all categories
+       const categories = [category1, category2, category3, category4, category5, category6, category7, category8, category9];
+        // Array to hold root IDs corresponding to categories
+        const roots = ['root1', 'root2', 'root3', 'root4', 'root5', 'root6', 'root7', 'root8', 'root9'];
+
+        // Retrieve cart from localStorage, or initialize an empty array
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Function to display items for each category
+        const displayItems = (items, containerId) => {
+            const root = document.getElementById(containerId);
+            root.innerHTML = items.map(item =>
+                `<div class='box'>
+                    <a href='${item.link}'>
+                        <div class='img-box'>
+                            <img class='images' src='${item.image}' alt='${item.title}' />
+                        </div>
+                        <div class='bottom'>
+                            <p>${item.title}</p>
+                            <h2>Rs. ${item.price}.00</h2>
+                        </div>
+                    </a>
+                    <button onclick='addToCart(${JSON.stringify(item)})'>Add to cart</button>
+                </div>`
+            ).join('');
+        };
+
+        // Function to add product to cart
+        const addToCart = (product) => {
+            const existingItem = cart.find(item => item.id === product.id);
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+            updateCart();
+        };
+
+        // Function to update cart
+        const updateCart = () => {
+            const cartCount = document.getElementById('cart-count');
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+
+            cartCount.textContent = cart.reduce((acc, item) => acc + item.quantity, 0);
+            cartTotal.textContent = cart.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2);
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `<p>No items in cart</p>`;
+                return;
+            }
+
+            cartItemsContainer.innerHTML = cart.map(item =>
+                `<div class='cart-item'>
+                    <span>${item.title} - Rs. ${item.price}.00 (Quantity: ${item.quantity})</span>
+                    <button onclick='removeFromCart(${item.id})'>Remove</button>
+                </div>`
+            ).join('');
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+        };
+
+        // Function to remove item from cart
+        const removeFromCart = (productId) => {
+            cart = cart.filter(item => item.id !== productId);
+            updateCart();
+        };
+
+        // Function to toggle cart modal visibility
+        const toggleCartModal = () => {
+            const cartModal = document.getElementById('cart-modal');
+            cartModal.style.display = cartModal.style.display === 'block' ? 'none' : 'block';
+        };
+
+        // Initial display of products for each category
+        categories.forEach((category, index) => {
+            displayItems(category, roots[index]);
+        });
+
+        // Search functionality
+        const searchBar = document.getElementById('searchBar');
+        searchBar.addEventListener('keyup', (e) => {
+            const searchString = e.target.value.toLowerCase();
+
+            const filteredCategories = categories.map(category =>
+                category.filter(item =>
+                    item.title.toLowerCase().includes(searchString)
+                )
+            );
+
+            roots.forEach((rootId, index) => {
+                displayItems(filteredCategories[index], rootId);
+            });
+        });
+
+        // Display cart on page load
+        window.addEventListener('load', updateCart);
+    </script>
+</body>
+</html>
